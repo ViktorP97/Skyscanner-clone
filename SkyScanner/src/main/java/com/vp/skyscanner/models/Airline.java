@@ -1,4 +1,5 @@
 package com.vp.skyscanner.models;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -19,6 +20,8 @@ public class Airline {
   private Long id;
   private String name;
 
+  private int baggagePrice;
+
   @OneToMany(mappedBy = "airline", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Flight> flights = new ArrayList<>();
 
@@ -26,8 +29,9 @@ public class Airline {
 
   }
 
-  public Airline(String name) {
+  public Airline(String name, int baggagePrice) {
     this.name = name;
+    this.baggagePrice = baggagePrice;
   }
 
   public Long getId() {
@@ -52,5 +56,13 @@ public class Airline {
 
   public void setFlights(List<Flight> flights) {
     this.flights = flights;
+  }
+
+  public int getBaggagePrice() {
+    return baggagePrice;
+  }
+
+  public void setBaggagePrice(int baggagePrice) {
+    this.baggagePrice = baggagePrice;
   }
 }
