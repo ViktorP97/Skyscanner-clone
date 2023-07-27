@@ -1,4 +1,5 @@
 package com.vp.skyscanner.models;
+
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
