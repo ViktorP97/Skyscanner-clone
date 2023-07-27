@@ -1,10 +1,13 @@
 package com.vp.skyscanner.services;
 
 import com.vp.skyscanner.dtos.FlightDto;
+import com.vp.skyscanner.dtos.FlightSearchResponseDto;
 import com.vp.skyscanner.dtos.RequestDto;
 import com.vp.skyscanner.models.Flight;
 import com.vp.skyscanner.repositories.FlightRepository;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,5 +52,33 @@ public class FlightServiceImpl implements FlightService {
       }
     }
     return flightDtos;
+  }
+
+  @Override
+  public FlightSearchResponseDto getAllFlightsBasedOnRequest(RequestDto requestDto) {
+    List<FlightDto> flights = getAllFlightsBasedOnFromAndTo(requestDto);
+
+    FlightDto cheapestFlight = findCheapestFlight(flights);
+    FlightDto fastestFlight = findFastestFlight(flights);
+
+    FlightSearchResponseDto response = new FlightSearchResponseDto();
+    response.setCheapestFlight(cheapestFlight);
+    response.setFastestFlight(fastestFlight);
+    response.setAllFlights(flights);
+
+    return response;
+  }
+
+  private FlightDto findCheapestFlight(List<FlightDto> flights) {
+    return flights.stream()
+        .min(Comparator.comparingInt(FlightDto::getPrice))
+        .orElse(null);
+  }
+
+  private FlightDto findFastestFlight(List<FlightDto> flights) {
+    return flights.stream()
+        .min(Comparator.comparingLong(flightDto -> Duration.between(
+            flightDto.getTimeOfFlight(), flightDto.getTimeOfArrive()).toMinutes()))
+        .orElse(null);
   }
 }
