@@ -1,4 +1,5 @@
 package com.vp.skyscanner.models;
+
 import com.vp.skyscanner.security.RoleType;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,9 @@ public class UserEntity {
   private int flyPoint;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Ticket> tickets = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Baggage> baggage;
 
 
   public UserEntity() {
@@ -109,5 +113,13 @@ public class UserEntity {
 
   public void setTickets(List<Ticket> tickets) {
     this.tickets = tickets;
+  }
+
+  public List<Baggage> getBaggage() {
+    return baggage;
+  }
+
+  public void setBaggage(List<Baggage> baggage) {
+    this.baggage = baggage;
   }
 }
