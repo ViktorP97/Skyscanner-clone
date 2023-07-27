@@ -1,7 +1,7 @@
 package com.vp.skyscanner.controllers;
 
 import com.vp.skyscanner.dtos.FlightDto;
-import com.vp.skyscanner.dtos.FlightSearchResponse;
+import com.vp.skyscanner.dtos.FlightSearchResponseDto;
 import com.vp.skyscanner.dtos.RequestDto;
 import com.vp.skyscanner.services.FlightService;
 import java.util.List;
@@ -32,7 +32,7 @@ public class FlightsController {
 
   @PostMapping("/tickets")
   public ResponseEntity getAllFlightsBasedOnRequest(@RequestBody RequestDto requestDto) {
-    FlightSearchResponse response = flightService.getAllFlightsBasedOnRequest(requestDto);
+    FlightSearchResponseDto response = flightService.getAllFlightsBasedOnRequest(requestDto);
     if (response.getAllFlights().isEmpty()) {
       return ResponseEntity.status(404).body("No tickets found");
     }
