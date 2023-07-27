@@ -1,6 +1,5 @@
 package com.vp.skyscanner.models;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,9 @@ public class Flight {
 
   @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Ticket> tickets = new ArrayList<>();
+
+  @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Baggage> baggage = new ArrayList<>();
 
   public Flight() {
 
@@ -129,5 +131,13 @@ public class Flight {
 
   public void setTickets(List<Ticket> tickets) {
     this.tickets = tickets;
+  }
+
+  public List<Baggage> getBaggage() {
+    return baggage;
+  }
+
+  public void setBaggage(List<Baggage> baggage) {
+    this.baggage = baggage;
   }
 }
