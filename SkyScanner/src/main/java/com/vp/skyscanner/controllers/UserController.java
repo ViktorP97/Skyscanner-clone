@@ -1,6 +1,7 @@
 package com.vp.skyscanner.controllers;
 
 import com.vp.skyscanner.dtos.MoneyDto;
+import com.vp.skyscanner.dtos.PreferencesDto;
 import com.vp.skyscanner.dtos.ProfileDto;
 import com.vp.skyscanner.dtos.TicketDto;
 import com.vp.skyscanner.exceptions.UserNameNotFoundException;
@@ -25,7 +26,6 @@ public class UserController {
 
   private final UserService userService;
   private final UserRepository userRepository;
-
   private final TicketService ticketService;
 
   @Autowired
@@ -72,5 +72,16 @@ public class UserController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+  }
+
+  @PostMapping("/add/alert")
+  public ResponseEntity addPriceAlert(@RequestBody PreferencesDto preferencesDto,
+      Authentication authentication) {
+    String username = authentication.getName();
+    UserEntity user = userService.getUserByName(username);
+    if (user == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.ok(userService.addPriceAlert(user, preferencesDto));
   }
 }
