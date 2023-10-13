@@ -13,6 +13,7 @@ public class FlightDto {
   private int availableSeats;
   private int price;
   private String airline;
+  private double airlineRating;
 
   public FlightDto() {
 
@@ -20,7 +21,7 @@ public class FlightDto {
 
   public FlightDto(Long id, int flightNumber, String departure, String arrive,
       LocalDateTime timeOfFlight,
-      LocalDateTime timeOfArrive, int availableSeats, int price, String airline) {
+      LocalDateTime timeOfArrive, int availableSeats, int price, String airline, double airlineRating) {
     this.id = id;
     this.flightNumber = flightNumber;
     this.departure = departure;
@@ -30,6 +31,7 @@ public class FlightDto {
     this.availableSeats = availableSeats;
     this.price = price;
     this.airline = airline;
+    this.airlineRating = airlineRating;
   }
 
   public Long getId() {
@@ -102,5 +104,13 @@ public class FlightDto {
 
   public void setPrice(int price) {
     this.price = price;
+  }
+
+  public double getAirlineRating() {
+    return airlineRating;
+  }
+
+  public void setAirlineRating(double airlineRating) {
+    this.airlineRating = airlineRating;
   }
 }

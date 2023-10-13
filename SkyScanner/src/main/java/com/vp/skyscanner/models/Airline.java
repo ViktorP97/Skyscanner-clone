@@ -22,8 +22,13 @@ public class Airline {
 
   private int baggagePrice;
 
+  private double rating;
+
   @OneToMany(mappedBy = "airline", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Flight> flights = new ArrayList<>();
+
+  @OneToMany(mappedBy = "airline", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Rating> ratings = new ArrayList<>();
 
   public Airline() {
 
@@ -32,6 +37,7 @@ public class Airline {
   public Airline(String name, int baggagePrice) {
     this.name = name;
     this.baggagePrice = baggagePrice;
+    this.rating = 0;
   }
 
   public Long getId() {
@@ -64,5 +70,21 @@ public class Airline {
 
   public void setBaggagePrice(int baggagePrice) {
     this.baggagePrice = baggagePrice;
+  }
+
+  public double getRating() {
+    return rating;
+  }
+
+  public void setRating(double rating) {
+    this.rating = rating;
+  }
+
+  public List<Rating> getRatings() {
+    return ratings;
+  }
+
+  public void setRatings(List<Rating> ratings) {
+    this.ratings = ratings;
   }
 }

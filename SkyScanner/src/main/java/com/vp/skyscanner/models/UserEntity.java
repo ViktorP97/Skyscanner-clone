@@ -28,6 +28,8 @@ public class UserEntity {
   @Enumerated(EnumType.STRING)
   private RoleType roleType;
   @Column(nullable = false)
+  private boolean verified;
+  @Column(nullable = false)
   private int money;
   private int flyPoint;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -36,6 +38,8 @@ public class UserEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Baggage> baggage;
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<PriceAlertEntity> priceAlerts = new ArrayList<>(); // Add this line
 
   public UserEntity() {
     this.money = 0;
@@ -121,5 +125,25 @@ public class UserEntity {
 
   public void setBaggage(List<Baggage> baggage) {
     this.baggage = baggage;
+  }
+
+  public List<PriceAlertEntity> getPriceAlerts() {
+    return priceAlerts;
+  }
+
+  public void setPriceAlerts(List<PriceAlertEntity> priceAlerts) {
+    this.priceAlerts = priceAlerts;
+  }
+
+  public boolean isVerified() {
+    return verified;
+  }
+
+  public void setVerified(boolean verified) {
+    this.verified = verified;
+  }
+
+  public void verifyUser() {
+    verified = true;
   }
 }
