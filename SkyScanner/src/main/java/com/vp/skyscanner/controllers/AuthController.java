@@ -53,9 +53,9 @@ public class AuthController {
   public ResponseEntity login(@RequestBody LoginDto loginDto) {
     try {
       AuthDto authDto = registrationService.login(loginDto);
-      return ResponseEntity.ok(authDto);
+      return ResponseEntity.ok("Welcome to SkyScannerClone. Use this token to access our application: "
+      + authDto.getToken());
     } catch (BadCredentialsException e) {
-      // Handle the BadCredentialsException here and return a customized response
       String errorMessage = e.getMessage();
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
     }
@@ -67,5 +67,12 @@ public class AuthController {
     String username = authentication.getName();
     UserEntity user = userService.getUserByName(username);
     return ResponseEntity.ok(userService.changePassword(user, passwordDto));
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<String> logout(Authentication authentication) {
+    String username = authentication.getName();
+    UserEntity user = userService.getUserByName(username);
+    return ResponseEntity.ok(registrationService.logout(user));
   }
 }
