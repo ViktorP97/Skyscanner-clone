@@ -2,7 +2,7 @@
 Skyscanner-clone
 # Description
 Welcome to SkyscannerClone, a Java-based application that offers a simplified replica of the popular flight search platform, Skyscanner. This project allows users to register, search for flights, purchase tickets, and manage their travel history.
-# Usage
+# Features
 **User Registration and Authentication:**
 Users can sign up with their email, name, and a strong password, ensuring it contains at least one digit and one uppercase character. Upon registration, users will receive a verification link via email to confirm their account.
 
@@ -21,7 +21,7 @@ Once users find their preferred flight, they can proceed to purchase tickets by 
 **Price Alerts:**
 Users can set up price alerts for specific travel destinations. They can specify a target price for their desired route. When the application finds flight options that match or fall below the specified price alert, it will send an email notification to the user.
 
-**How to Use:**
+# How to Use
 **User Registration:** Sign up with your email, name, and a strong password. Verify your account via the email link sent to you.
 
 **Flight Search:** Explore available flights, filter search results based on your preferences, and find the best travel options.
