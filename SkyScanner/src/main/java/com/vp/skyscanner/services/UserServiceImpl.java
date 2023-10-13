@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void addMoney(UserEntity user, int money) {
-    user.setMoney(money);
+    user.setMoney(user.getMoney() + money);
   }
 
   @Override
