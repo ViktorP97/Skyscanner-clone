@@ -3,15 +3,19 @@ package com.vp.skyscanner.services;
 import com.vp.skyscanner.dtos.AuthDto;
 import com.vp.skyscanner.dtos.LoginDto;
 import com.vp.skyscanner.dtos.RegisterDto;
-import com.vp.skyscanner.dtos.RegisterResponseDto;
 import com.vp.skyscanner.exceptions.ObjectNotFoundException;
 import com.vp.skyscanner.exceptions.SignatureException;
+import com.vp.skyscanner.models.AuthToken;
 import com.vp.skyscanner.models.ConfirmationToken;
 import com.vp.skyscanner.models.UserEntity;
+import com.vp.skyscanner.repositories.AuthTokenRepository;
 import com.vp.skyscanner.repositories.UserRepository;
 import com.vp.skyscanner.security.JwtService;
 import com.vp.skyscanner.security.RoleType;
+import com.vp.skyscanner.security.SecurityConstants;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
   private final Boolean sendEmail;
   private final UserService userService;
   private final ConfirmationTokenService confirmationTokenService;
+  private final AuthTokenRepository authTokenRepository;
 
   @Autowired
   public RegistrationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
@@ -42,7 +47,8 @@ public class RegistrationServiceImpl implements RegistrationService {
       @Value("${EMAIL_VERIFICATION_SWITCH}") Boolean verifyEmail,
       @Value("${EMAIL_VERIFICATION_LINK}") String emailVerificationLink,
       @Value("${EMAIL_SEND_SWITCH}") Boolean sendEmail,
-      UserService userService, ConfirmationTokenService confirmationTokenService) {
+      UserService userService, ConfirmationTokenService confirmationTokenService,
+      AuthTokenRepository authTokenRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
@@ -53,6 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     this.sendEmail = sendEmail;
     this.userService = userService;
     this.confirmationTokenService = confirmationTokenService;
+    this.authTokenRepository = authTokenRepository;
   }
 
   @Override
@@ -127,15 +134,47 @@ public class RegistrationServiceImpl implements RegistrationService {
       throw new BadCredentialsException("Account has not been verified");
     }
 
+    if (user.isLogged()) {
+      throw new BadCredentialsException("You are already logged in");
+    }
+
+    user.setLogged(true);
+    userRepository.save(user);
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 
     String jwtToken = jwtService.generateToken(user);
 
+    AuthToken authToken = new AuthToken();
+    authToken.setTokenValue(jwtToken);
+    authToken.setUser(user);
+    authToken.setValid(true);
+    authToken.setExpirationDate(SecurityConstants.JWT_EXPIRATION);
+    authTokenRepository.save(authToken);
+
     AuthDto authDto = new AuthDto();
     authDto.setToken(jwtToken);
 
     return authDto;
+  }
+
+  @Override
+  public String logout(UserEntity user) {
+    List<AuthToken> tokenList = authTokenRepository.findAll();
+    long id = 0;
+    for (AuthToken token : tokenList) {
+      if (token.isValid()) {
+        id = token.getId();
+      }
+    }
+    Optional<AuthToken> authToken = authTokenRepository.findByUserAndId(user, id);
+    if (authToken.isPresent()) {
+      authToken.get().setValid(false);
+      user.setLogged(false);
+      authTokenRepository.save(authToken.get());
+      userRepository.save(user);
+    }
+    return "Logged out successfully.";
   }
 
   public boolean containDigit(String password) {
