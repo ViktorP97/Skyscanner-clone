@@ -16,6 +16,8 @@ public class Rating {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private double rating;
+
   @ManyToOne
   @JoinColumn(name = "airline_id")
   private Airline airline;
@@ -34,6 +36,14 @@ public class Rating {
 
   public Long getId() {
     return id;
+  }
+
+  public double getRating() {
+    return rating;
+  }
+
+  public void setRating(double rating) {
+    this.rating = rating;
   }
 
   public Airline getAirline() {
