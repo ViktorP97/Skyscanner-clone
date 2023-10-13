@@ -1,6 +1,9 @@
 package com.vp.skyscanner.security;
 
+import com.vp.skyscanner.models.AuthToken;
+import com.vp.skyscanner.repositories.AuthTokenRepository;
 import java.io.IOException;
+import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +24,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   @Autowired
   private CustomUserDetailsService customUserDetailsService;
 
+  private AuthTokenRepository authTokenRepository;
+
 
   public JwtAuthFilter() {
 
+  }
+  @Autowired
+  public void setAuthTokenRepository(AuthTokenRepository authTokenRepository) {
+    this.authTokenRepository = authTokenRepository;
   }
 
   @Override
@@ -44,17 +53,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     UserDetails userDetails;
 
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      userDetails = customUserDetailsService.loadUserByUsername(username);
-      if (jwtService.isTokenValid(jwt, userDetails)) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-            userDetails,
-            null,
-            userDetails.getAuthorities());
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-      }
-    }
+      Optional<AuthToken> authTokenEntity = authTokenRepository.findByTokenValue(jwt);
 
-    filterChain.doFilter(request, response);
+      if (authTokenEntity.isPresent()) {
+        userDetails = customUserDetailsService.loadUserByUsername(username);
+        if (jwtService.isTokenValid(jwt, userDetails) && authTokenEntity.get().isValid()) {
+          UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+              userDetails,
+              null,
+              userDetails.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+      }
+
+      filterChain.doFilter(request, response);
+    }
   }
 }
