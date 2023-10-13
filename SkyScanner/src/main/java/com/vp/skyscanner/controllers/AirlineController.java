@@ -3,6 +3,7 @@ package com.vp.skyscanner.controllers;
 import com.vp.skyscanner.dtos.AirlineDto;
 import com.vp.skyscanner.dtos.RatingDto;
 import com.vp.skyscanner.services.AirlineService;
+import com.vp.skyscanner.services.RatingService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ public class AirlineController {
 
   private final AirlineService airlineService;
 
+  private final RatingService ratingService;
+
   @Autowired
-  public AirlineController(AirlineService airlineService) {
+  public AirlineController(AirlineService airlineService, RatingService ratingService) {
     this.airlineService = airlineService;
+    this.ratingService = ratingService;
   }
 
   @GetMapping("/airlines")
@@ -32,6 +36,6 @@ public class AirlineController {
 
   @PostMapping("/airline/rating/{id}")
   public ResponseEntity addRatingToAirline(@PathVariable long id, @RequestBody RatingDto ratingDto) {
-    return ResponseEntity.ok(airlineService.addRating(id, ratingDto));
+    return ResponseEntity.ok(ratingService.addRating(id, ratingDto));
   }
 }
