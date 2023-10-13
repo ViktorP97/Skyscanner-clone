@@ -32,6 +32,8 @@ public class UserEntity {
   @Column(nullable = false)
   private int money;
   private int flyPoint;
+
+  private boolean logged;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Ticket> tickets = new ArrayList<>();
 
@@ -39,7 +41,10 @@ public class UserEntity {
   private List<Baggage> baggage;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<PriceAlertEntity> priceAlerts = new ArrayList<>(); // Add this line
+  private List<PriceAlertEntity> priceAlerts = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<AuthToken> authToken;
 
   public UserEntity() {
     this.money = 0;
@@ -145,5 +150,21 @@ public class UserEntity {
 
   public void verifyUser() {
     verified = true;
+  }
+
+  public List<AuthToken> getAuthToken() {
+    return authToken;
+  }
+
+  public void setAuthToken(List<AuthToken> authToken) {
+    this.authToken = authToken;
+  }
+
+  public boolean isLogged() {
+    return logged;
+  }
+
+  public void setLogged(boolean logged) {
+    this.logged = logged;
   }
 }
