@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface AirlineRepository extends JpaRepository<Airline, Long> {
 
   Optional<Airline> findByName(String name);
+
+  Optional<Airline> findById(Long id);
 }
