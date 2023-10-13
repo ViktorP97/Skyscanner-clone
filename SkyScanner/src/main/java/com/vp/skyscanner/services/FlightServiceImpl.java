@@ -27,7 +27,8 @@ public class FlightServiceImpl implements FlightService {
     return new FlightDto(flight.getId(), flight.getFlightNumber(), flight.getDeparture(),
         flight.getArrive(),
         flight.getTimeOfFlight(), flight.getTimeOfArrive(),
-        flight.getAvailableSeats(), flight.getPrice(), flight.getAirline().getName());
+        flight.getAvailableSeats(), flight.getPrice(), flight.getAirline().getName(),
+        flight.getAirline().getRating());
   }
 
   @Override
