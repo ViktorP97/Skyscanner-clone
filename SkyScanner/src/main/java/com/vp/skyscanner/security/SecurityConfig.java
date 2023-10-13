@@ -70,4 +70,13 @@ public class SecurityConfig {
   public JwtAuthFilter jwtAuthFilter() {
     return new JwtAuthFilter();
   }
+
+//  @Bean
+//  public JwtAuthFilter jwtAuthFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService, AuthTokenRepository authTokenRepository) {
+//    JwtAuthFilter jwtAuthFilter = new JwtAuthFilter();
+//    jwtAuthFilter.setJwtService(jwtService);
+//    jwtAuthFilter.setCustomUserDetailsService(customUserDetailsService);
+//    jwtAuthFilter.setAuthTokenRepository(authTokenRepository);
+//    return jwtAuthFilter;
+//  }
 }
